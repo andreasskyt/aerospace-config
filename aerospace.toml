@@ -1,0 +1,231 @@
+# AeroSpace Config - Dansk Tastatur Optimeret
+# ============================================
+
+config-version = 2
+
+# Start ved login
+start-at-login = true
+after-startup-command = ['flatten-workspace-tree', 'balance-sizes']
+
+# Notify sketchybar when the focused workspace changes so it can highlight it
+exec-on-workspace-change = ['/bin/bash', '-c',
+    'echo "$(date +%T) ws=$AEROSPACE_FOCUSED_WORKSPACE" >> /tmp/aerospace-debug.log; /usr/local/bin/sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+]
+
+# Normaliseringer
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# Layout indstillinger
+accordion-padding = 0
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+
+# Mus følger fokus ved skærm-skift
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+# 11 Workspaces: Code, Terminal, Warp, Browser, Notion, Messaging, Obsidian, Zoom, Finder, Recording, Todoist
+persistent-workspaces = ["C", "G", "W", "B", "N", "M", "O", "Z", "F", "R", "T"]
+
+# Tastatur layout
+[key-mapping]
+    preset = 'qwerty'
+    key-notation-to-key-code.j = 'j'
+    key-notation-to-key-code.k = 'k'
+    key-notation-to-key-code.l = 'l'
+    key-notation-to-key-code.i = 'i'
+
+
+[gaps]
+    inner.horizontal = 20
+    inner.vertical =   20
+    outer.left =       20
+    outer.bottom =     20
+    outer.top =        40
+    outer.right =      20
+
+# ========================================
+# AUTO-FLYT APPS TIL WORKSPACE VED ÅBNING
+# ========================================
+[[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+run = 'move-node-to-workspace B'
+
+[[on-window-detected]]
+if.app-id = 'notion.id'
+run = 'move-node-to-workspace N'
+
+[[on-window-detected]]
+if.app-id = 'com.todesktop.230313mzl4w4u92'  # Cursor
+run = 'move-node-to-workspace C'
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode'  # Visual Studio Code
+run = 'move-node-to-workspace C'
+
+[[on-window-detected]]
+if.app-id = 'com.mitchellh.ghostty'  # Ghostty
+run = 'move-node-to-workspace G'
+
+[[on-window-detected]]
+if.app-id = 'dev.warp.Warp-Stable'  # Warp
+run = 'move-node-to-workspace W'
+
+[[on-window-detected]]
+if.app-id = 'com.anthropic.claudefordesktop'  # Claude Desktop
+run = 'move-node-to-workspace G'
+
+[[on-window-detected]]
+if.app-id = 'com.tinyspeck.slackmacgap'  # Slack
+run = 'move-node-to-workspace M'
+
+[[on-window-detected]]
+if.app-id = 'net.whatsapp.WhatsApp'  # WhatsApp
+run = 'move-node-to-workspace M'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.MobileSMS'  # Messages/iMessage
+run = 'move-node-to-workspace M'
+
+[[on-window-detected]]
+if.app-id = 'com.spotify.client'  # Spotify
+run = 'move-node-to-workspace M'
+
+[[on-window-detected]]
+if.app-id = 'md.obsidian'  # Obsidian
+run = 'move-node-to-workspace O'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.iMovieApp'  # iMovie → Recording workspace
+run = 'move-node-to-workspace R'
+
+[[on-window-detected]]
+if.app-id = 'com.elgato.StreamDeck'  # Stream Deck
+run = 'move-node-to-workspace R'
+
+[[on-window-detected]]
+if.app-id = 'com.obsproject.obs-studio'  # OBS Studio
+run = 'move-node-to-workspace R'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.QuickTimePlayerX'  # QuickTime Player
+run = 'move-node-to-workspace R'
+
+[[on-window-detected]]
+if.app-id = 'us.zoom.xos'  # Zoom
+run = 'move-node-to-workspace Z'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'  # Finder
+run = ['move-node-to-workspace F', 'layout accordion']
+
+[[on-window-detected]]
+if.app-id = 'com.todoist.mac.Todoist'  # Todoist
+run = 'move-node-to-workspace T'
+
+[[on-window-detected]]
+if.app-id = 'com.loom.desktop'  # Loom — float so Aerospace doesn't resize it; its window bounds don't match the recording frame
+run = 'layout floating'
+
+# ========================================
+# HOVEDGENVEJE (Main binding mode)
+# ========================================
+[mode.main.binding]
+
+    # ------------------
+    # NAVIGATION (Fokus)
+    # ------------------
+    alt-j = 'focus left'      # ⌥J = Venstre
+    alt-k = 'focus down'      # ⌥K = Ned
+    alt-i = 'focus up'        # ⌥I = Op
+    alt-l = 'focus right'     # ⌥L = Højre
+
+    # ------------------
+    # FLYT VINDUE
+    # ------------------
+    alt-shift-j = 'move left'     # ⌥⇧J = Flyt venstre
+    alt-shift-k = 'move down'     # ⌥⇧K = Flyt ned
+    alt-shift-i = 'move up'       # ⌥⇧I = Flyt op
+    alt-shift-l = 'move right'    # ⌥⇧L = Flyt højre
+
+    # ------------------
+    # WORKSPACES (5 stk)
+    # ------------------
+    alt-c = 'workspace C'     # ⌥C = Code (Cursor, VS Code)
+    alt-b = 'workspace B'     # ⌥B = Browser
+    alt-n = 'workspace N'     # ⌥N = Notion
+    alt-m = 'workspace M'     # ⌥M = Messaging & Music (Slack, WhatsApp, Messages, Spotify)
+    alt-o = 'workspace O'     # ⌥O = Obsidian
+    alt-g = 'workspace G'     # ⌥G = Ghostty/Terminal (Ghostty, Claude Desktop)
+    alt-w = 'workspace W'     # ⌥W = Warp
+    alt-z = 'workspace Z'     # ⌥Z = Zoom
+    alt-f = 'workspace F'     # ⌥F = Finder
+    alt-r = 'workspace R'     # ⌥R = Recording (OBS, QuickTime, Stream Deck)
+    alt-t = ['exec-and-forget open -a Todoist', 'workspace T']  # ⌥T = Todoist
+
+    # ------------------
+    # FLYT TIL WORKSPACE
+    # ------------------
+    alt-shift-c = 'move-node-to-workspace C'    # ⌥⇧C = Flyt til Code
+    alt-shift-b = 'move-node-to-workspace B'    # ⌥⇧B = Flyt til Browser
+    alt-shift-n = 'move-node-to-workspace N'    # ⌥⇧N = Flyt til Notion
+    alt-shift-m = 'move-node-to-workspace M'    # ⌥⇧M = Flyt til Messaging
+    alt-shift-o = 'move-node-to-workspace O'    # ⌥⇧O = Flyt til Obsidian
+    alt-shift-g = 'move-node-to-workspace G'     # ⌥⇧G = Flyt til Ghostty/Terminal
+    alt-shift-w = 'move-node-to-workspace W'     # ⌥⇧W = Flyt til Warp
+    alt-shift-z = 'move-node-to-workspace Z'    # ⌥⇧Z = Flyt til Zoom
+    alt-shift-f = 'move-node-to-workspace F'    # ⌥⇧F = Flyt til Finder
+    alt-shift-r = 'move-node-to-workspace R'    # ⌥⇧R = Flyt til Recording
+    alt-shift-t = 'move-node-to-workspace T'    # ⌥⇧T = Flyt til Todoist
+
+    # ------------------
+    # LAYOUT
+    # ------------------
+    alt-a = 'layout accordion tiles'  # ⌥A = Toggle mellem Accordion og Tiles
+
+    # ------------------
+    # RESIZE
+    # ------------------
+    alt-minus = 'resize smart -30'    # ⌥- = Mindre
+    alt-equal = 'resize smart +30'    # ⌥+ = Større
+
+    # ------------------
+    # TERMINAL
+    # ------------------
+    alt-enter = ['exec-and-forget open -na Warp', 'workspace W']    # ⌥Enter = Åbn Warp + skift til workspace
+
+    # ------------------
+    # WORKSPACE NAVIGATION
+    # ------------------
+    alt-tab = 'workspace-back-and-forth'                          # ⌥Tab = Forrige workspace
+    alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'  # ⌥⇧Tab = Flyt workspace til næste skærm
+
+    # ------------------
+    # SMART APP FOKUS (åbner app + skifter til dens workspace)
+    # ------------------
+    # Chrome smart focus removed — alt-b already switches to Browser workspace
+
+    # ------------------
+    # SERVICE MODE
+    # ------------------
+    alt-s = 'mode service'           # ⌥S = Service mode
+
+# ========================================
+# SERVICE MODE (Reload, reset, etc.)
+# ========================================
+[mode.service.binding]
+    esc = ['reload-config', 'mode main']                    # Esc = Reload config & afslut
+    r = ['flatten-workspace-tree', 'mode main']             # R = Reset layout
+    t = ['layout tiles horizontal vertical', 'mode main']  # T = Tiles (skift retning)
+    f = ['layout floating tiling', 'mode main']             # F = Toggle floating
+    backspace = ['close-all-windows-but-current', 'mode main']  # Backspace = Luk alt undtagen dette vindue
+    b = ['balance-sizes', 'mode main']                      # B = Balance vinduestørrelser
+    l = ['flatten-workspace-tree', 'balance-sizes', 'mode main']  # L = Laptop mode reset
+
+    # ------------------
+    # GROUPING (Join with)
+    # ------------------
+    j = ['join-with left', 'mode main']     # J = Grupér med venstre
+    k = ['join-with down', 'mode main']     # K = Grupér med ned
+    i = ['join-with up', 'mode main']       # I = Grupér med op
+    d = ['join-with right', 'mode main']    # D = Grupér med højre
