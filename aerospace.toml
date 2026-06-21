@@ -9,7 +9,7 @@ after-startup-command = ['flatten-workspace-tree', 'balance-sizes']
 
 # Notify sketchybar when the focused workspace changes so it can highlight it
 exec-on-workspace-change = ['/bin/bash', '-c',
-    'echo "$(date +%T) ws=$AEROSPACE_FOCUSED_WORKSPACE" >> /tmp/aerospace-debug.log; /usr/local/bin/sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+    'echo "$(date +%T) ws=$AEROSPACE_FOCUSED_WORKSPACE" >> /tmp/aerospace-debug.log; kill $(cat /tmp/aerospace-ws-pid 2>/dev/null) 2>/dev/null; (sleep 0.3 && /usr/local/bin/sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE) & echo $! > /tmp/aerospace-ws-pid'
 ]
 
 # Normaliseringer
@@ -24,8 +24,8 @@ default-root-container-orientation = 'auto'
 # Mus følger fokus ved skærm-skift
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
-# 11 Workspaces: Code, Terminal, Warp, Browser, Notion, Messaging, Obsidian, Zoom, Finder, Recording, Todoist
-persistent-workspaces = ["C", "G", "W", "B", "N", "M", "O", "Z", "F", "R", "T"]
+# 12 Workspaces: Code, Terminal, Warp, Browser, Notion, Messaging, Obsidian, Zoom, Finder, Recording, Todoist, Excalidraw
+persistent-workspaces = ["C", "G", "W", "B", "N", "M", "O", "Z", "F", "R", "T", "E"]
 
 # Tastatur layout
 [key-mapping]
@@ -39,10 +39,10 @@ persistent-workspaces = ["C", "G", "W", "B", "N", "M", "O", "Z", "F", "R", "T"]
 [gaps]
     inner.horizontal = 20
     inner.vertical =   20
-    outer.left =       20
-    outer.bottom =     20
+    outer.left =       40   # Wide gutter reserved for the always-on-top Stickies column
+    outer.bottom =     40
     outer.top =        40
-    outer.right =      20
+    outer.right =      40
 
 # ========================================
 # AUTO-FLYT APPS TIL WORKSPACE VED ÅBNING
@@ -124,8 +124,23 @@ if.app-id = 'com.todoist.mac.Todoist'  # Todoist
 run = 'move-node-to-workspace T'
 
 [[on-window-detected]]
+if.app-id = 'com.chocoford.excalidraw'  # ExcalidrawZ → Excalidraw workspace
+run = 'move-node-to-workspace E'
+
+# Stickies is NOT routed to a workspace on purpose — it uses macOS "Floating Window"
+# (always-on-top) so it persists across ALL workspaces, living in the reserved left gutter (outer.left).
+
+[[on-window-detected]]
 if.app-id = 'com.loom.desktop'  # Loom — float so Aerospace doesn't resize it; its window bounds don't match the recording frame
 run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.pais.handy'  # Handy dictation overlay — float so Aerospace doesn't tile its transient bar and reflow the monitor
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.lemon.lvoverseas'  # CapCut — pin ALL windows to Recording (R) + float; stops its stray popup windows from landing in other workspaces and hijacking the monitor
+run = ['move-node-to-workspace R', 'layout floating']
 
 # ========================================
 # HOVEDGENVEJE (Main binding mode)
@@ -162,6 +177,7 @@ run = 'layout floating'
     alt-f = 'workspace F'     # ⌥F = Finder
     alt-r = 'workspace R'     # ⌥R = Recording (OBS, QuickTime, Stream Deck)
     alt-t = ['exec-and-forget open -a Todoist', 'workspace T']  # ⌥T = Todoist
+    alt-e = 'workspace E'     # ⌥E = Excalidraw/notes workspace (just switches; apps auto-land here when opened)
 
     # ------------------
     # FLYT TIL WORKSPACE
@@ -177,6 +193,7 @@ run = 'layout floating'
     alt-shift-f = 'move-node-to-workspace F'    # ⌥⇧F = Flyt til Finder
     alt-shift-r = 'move-node-to-workspace R'    # ⌥⇧R = Flyt til Recording
     alt-shift-t = 'move-node-to-workspace T'    # ⌥⇧T = Flyt til Todoist
+    alt-shift-e = 'move-node-to-workspace E'    # ⌥⇧E = Flyt til Excalidraw
 
     # ------------------
     # LAYOUT
